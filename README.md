@@ -28,3 +28,7 @@ To change default weather provider you need to go to Settings page and click Gen
 On displayed page you should see section called Main Sensors with Weather provider dropdown, that will let you pick OpenWeather Station as your new source of information.
 
 To see changes in top bar, you need to refresh Home Center UI.
+
+## Integration
+
+This quick application integrates with other Netatmo dedicated quick apps for devices. It will automatically populate configuration to new virtual Netatmo devices.
