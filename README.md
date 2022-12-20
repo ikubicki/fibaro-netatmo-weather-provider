@@ -8,9 +8,9 @@ Data updates every 5 minutes by default.
 
 ## Configuration
 
-`Client ID` - Netatmo client ID
+`ClientID` - Netatmo client ID
 
-`Client Secret` - Netatmo client secret
+`ClientSecret` - Netatmo client secret
 
 `Username` - Netatmo username
 
@@ -18,9 +18,11 @@ Data updates every 5 minutes by default.
 
 ### Optional values
 
-`Device ID` - identifier of Netatmo Weather Station from which values should be taken. This value will be automatically populated on first successful connection to weather station.
+`DeviceID` - identifier of Netatmo Weather Station from which values should be taken. This value will be automatically populated on first successful connection to weather station.
 
-`Refresh Interval` - number of minutes defining how often data should be refreshed. This value will be automatically populated on initialization of quick application.
+`Interval` - number of minutes defining how often data should be refreshed. This value will be automatically populated on initialization of quick application.
+
+`AccessToken` - Allows to set own access token and bypass credentials authentication.
 
 ## Changing weather provider
 

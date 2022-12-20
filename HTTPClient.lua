@@ -83,6 +83,8 @@ function HTTPClient:requestOptions(success, error, method, data, headers, isForm
                 end
                 options.data = options.data .. key .. '=' .. value
             end
+        elseif type(data) == 'string' then
+            options.data = data
         else
             options.data = json.encode(data)
         end

@@ -30,12 +30,13 @@ function Config:getDeviceID()
     return self.deviceID
 end
 
-function Config:setDeviceID(deviceID)
-    if string.len(self.deviceID) > 3 then
-        return false
-    end
-    self.app:setVariable("Device ID", deviceID)
-    self.deviceID = deviceID
+function Config:getAccessToken()
+    return self.token
+end
+
+function Config:setAccessToken(token)
+    self.app:setVariable("AccessToken", token)
+    self.token = token
 end
 
 function Config:getTimeoutInterval()
@@ -48,28 +49,30 @@ This way, adding other devices might be optional and leaves option for users,
 what they want to add into HC3 virtual devices.
 ]]
 function Config:init()
-    self.clientID = self.app:getVariable('Client ID')
-    self.clientSecret = self.app:getVariable('Client Secret')
+    self.clientID = self.app:getVariable('ClientID')
+    self.clientSecret = self.app:getVariable('ClientSecret')
     self.username = self.app:getVariable('Username')
     self.password = self.app:getVariable('Password')
-    self.deviceID = tostring(self.app:getVariable('Device ID'))
-    self.interval = self.app:getVariable('Refresh Interval')
+    self.deviceID = tostring(self.app:getVariable('DeviceID'))
+    self.interval = self.app:getVariable('Interval')
+    self.token = self.app:getVariable('AccessToken')
 
     local storedClientID = Globals:get('netatmo_client_id')
     local storedClientSecret = Globals:get('netatmo_client_secret')
     local storedUsername = Globals:get('netatmo_username')
     local storedPassword = Globals:get('netatmo_password')
     local storedInterval = Globals:get('netatmo_interval')
-    -- handling client ID
+
+    -- handling clientID
     if string.len(self.clientID) < 4 and string.len(storedClientID) > 3 then
-        self.app:setVariable("Client ID", storedClientID)
+        self.app:setVariable("ClientID", storedClientID)
         self.clientID = storedClientID
     elseif (storedClientID == nil and self.clientID) then -- or storedClientID ~= self.clientID then
         Globals:set('netatmo_client_id', self.clientID)
     end
     -- handling client secret
     if string.len(self.clientSecret) < 4 and string.len(storedClientSecret) > 3 then
-        self.app:setVariable("Client Secret", storedClientSecret)
+        self.app:setVariable("ClientSecret", storedClientSecret)
         self.clientSecret = storedClientSecret
     elseif (storedClientSecret == nil and self.clientSecret) then -- or storedClientSecret ~= self.clientSecret then
         Globals:set('netatmo_client_secret', self.clientSecret)
@@ -91,7 +94,7 @@ function Config:init()
     -- handling interval
     if not self.interval or self.interval == "" then
         if storedInterval and storedInterval ~= "" then
-            self.app:setVariable("Refresh Interval", storedInterval)
+            self.app:setVariable("Interval", storedInterval)
             self.interval = storedInterval
         else
             self.interval = "5"
