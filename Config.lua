@@ -39,6 +39,10 @@ function Config:setAccessToken(token)
     self.token = token
 end
 
+function Config:getRefreshToken()
+    return self.rtoken
+end
+
 function Config:getTimeoutInterval()
     return tonumber(self.interval) * 60000
 end
@@ -56,11 +60,11 @@ function Config:init()
     self.deviceID = tostring(self.app:getVariable('DeviceID'))
     self.interval = self.app:getVariable('Interval')
     self.token = self.app:getVariable('AccessToken')
+    self.rtoken = self.app:getVariable('RefreshToken')
 
     local storedClientID = Globals:get('netatmo_client_id')
     local storedClientSecret = Globals:get('netatmo_client_secret')
-    local storedUsername = Globals:get('netatmo_username')
-    local storedPassword = Globals:get('netatmo_password')
+    local storedRToken = Globals:get('netatmo_rtoken', '')
     local storedInterval = Globals:get('netatmo_interval')
 
     -- handling clientID
@@ -77,19 +81,12 @@ function Config:init()
     elseif (storedClientSecret == nil and self.clientSecret) then -- or storedClientSecret ~= self.clientSecret then
         Globals:set('netatmo_client_secret', self.clientSecret)
     end
-    -- handling username
-    if string.len(self.username) < 4 and string.len(storedUsername) > 3 then
-        self.app:setVariable("Username", storedUsername)
-        self.username = storedUsername
-    elseif (storedUsername == nil and self.username) then -- or storedUsername ~= self.username then
-        Globals:set('netatmo_username', self.username)
-    end
-    -- handling password
-    if string.len(self.password) < 4 and string.len(storedPassword) > 3 then
-        self.app:setVariable("Password", storedPassword)
-        self.password = storedPassword
-    elseif (storedPassword == nil and self.password) then -- or storedPassword ~= self.password then
-        Globals:set('netatmo_password', self.password)
+    -- handling rtoken
+    if string.len(self.rtoken) < 4 and string.len(storedRToken) > 3 then
+        self.app:setVariable("RefreshToken", storedRToken)
+        self.rtoken = storedRToken
+    elseif (storedRToken == nil and self.rtoken) then
+        Globals:set('netatmo_rtoken', self.token)
     end
     -- handling interval
     if not self.interval or self.interval == "" then

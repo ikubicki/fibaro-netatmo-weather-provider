@@ -31,6 +31,7 @@ phrases = {
         ['search-row-station-modules'] = '__ Wykryto %d modułów',
         ['search-row-module'] = '____ MODUŁ %s (ID: %s, typ: %s)',
         ['search-row-module_types'] = '____ Typy danych: %s',
+        ['check-logs'] = 'Zakończono wyszukiwanie. Sprawdź logi tego urządzenia: %s',
     },
     en = {
         ['search-devices'] = 'Search devices',
@@ -46,6 +47,7 @@ phrases = {
         ['search-row-station-modules'] = '__ %d modules detected',
         ['search-row-module'] = '____ MODULE %s (ID: %s, type: %s)',
         ['search-row-module_types'] = '____ Data types: %s',
+        ['check-logs'] = 'Check device logs (%s) for search results',
     },
     de = {
         ['search-devices'] = 'Geräte suchen',
@@ -61,5 +63,6 @@ phrases = {
         ['search-row-station-modules'] = '__ %d module erkannt',
         ['search-row-module'] = '____ MODULE %s (ID: %s, typ: %s)',
         ['search-row-module_types'] = '____ Datentypen: %s',
+        ['check-logs'] = 'Überprüfen Sie die Geräteprotokolle (%s) auf Suchergebnisse',
     }
 }

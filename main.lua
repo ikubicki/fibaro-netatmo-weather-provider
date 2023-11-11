@@ -1,6 +1,7 @@
 --[[
-Netatmo Weather Provider v.2.0.0
+Netatmo Weather Provider
 @author ikubicki
+@version 2.1.0
 ]]
 
 function QuickApp:setCondition(condition)

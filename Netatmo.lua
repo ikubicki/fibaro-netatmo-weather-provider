@@ -13,6 +13,7 @@ function Netatmo:new(config)
     self.device_id = config:getDeviceID()
     self.access_token = config:getAccessToken()
     self.token = Globals:get('netatmo_atoken', '')
+    self.refresh_token = config:getRefreshToken()
     self.http = HTTPClient:new({})
     return self
 end
@@ -134,6 +135,13 @@ function Netatmo:auth(callback)
         end
         return
     end
+    if string.len(self.access_token) > 10 then
+        if callback ~= nil then
+            Netatmo:setToken(self.access_token)
+            callback({})
+        end
+        return
+    end
     local data = {
         ["grant_type"] = 'password',
         ["scope"] = 'read_station',
@@ -142,6 +150,14 @@ function Netatmo:auth(callback)
         ["username"] = self.user,
         ["password"] = self.pass,
     }
+    if string.len(self.refresh_token) > 10 then
+        data = {
+            ["grant_type"] = 'refresh_token',
+            ["refresh_token"] = self.refresh_token,
+            ["client_id"] = self.client_id,
+            ["client_secret"] = self.client_secret,
+        }
+    end
     local fail = function(response)
         QuickApp:error('Unable to authenticate')
         if self.access_token == self.token then
