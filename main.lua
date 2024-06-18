@@ -1,7 +1,7 @@
 --[[
 Netatmo Weather Provider
 @author ikubicki
-@version 2.1.0
+@version 2.1.1
 ]]
 
 function QuickApp:setCondition(condition)
@@ -65,6 +65,13 @@ end
 function QuickApp:pullNetatmoData()
     self:updateView("button2_2", "text", self.i18n:get('refreshing'))
     local getWeatherDataCallback = function(weatherData)
+
+        if weatherData.error ~= nil then
+            self:updateView("label1", "text", weatherData.error)
+            self:updateView("button2_2", "text", self.i18n:get('refresh'))
+            return
+        end
+
         self:updateProperty("Temperature", weatherData.temp)
         self:updateProperty("Humidity", weatherData.humi)
         self:updateProperty("Wind", weatherData.wind)
@@ -97,7 +104,14 @@ function QuickApp:searchEvent()
     self:debug(self.i18n:get('searching-devices'))
     self:updateView("button2_1", "text", self.i18n:get('searching-devices'))
     local searchDevicesCallback = function(stations)
-        QuickApp:debug(json.encode(stations))
+
+        if stations.error ~= nil then
+            self:updateView("label1", "text", stations.error)
+            self:updateView("button2_1", "text", self.i18n:get('search-devices'))
+            return
+        end
+
+        -- QuickApp:debug(json.encode(stations))
         -- printing results
         for _, station in pairs(stations) do
             QuickApp:trace(string.format(self.i18n:get('search-row-station'), station.name, station.id))

@@ -51,6 +51,10 @@ function Netatmo:searchDevices(callback)
         end
     end
     local authCallback = function(response)
+        if response.error ~= nil then
+            callback(response)
+            return
+        end
         self:getStationsData(getStationsDataCallback)
     end
     self:auth(authCallback)
@@ -83,6 +87,10 @@ function Netatmo:getWeatherData(callback)
         end
     end
     local authCallback = function(response)
+        if response.error ~= nil then
+            callback(response)
+            return
+        end
         self:getStationsData(getStationsDataCallback)
     end
     self:auth(authCallback)
@@ -143,21 +151,11 @@ function Netatmo:auth(callback)
         return
     end
     local data = {
-        ["grant_type"] = 'password',
-        ["scope"] = 'read_station',
+        ["grant_type"] = 'refresh_token',
+        ["refresh_token"] = self.refresh_token,
         ["client_id"] = self.client_id,
         ["client_secret"] = self.client_secret,
-        ["username"] = self.user,
-        ["password"] = self.pass,
     }
-    if string.len(self.refresh_token) > 10 then
-        data = {
-            ["grant_type"] = 'refresh_token',
-            ["refresh_token"] = self.refresh_token,
-            ["client_id"] = self.client_id,
-            ["client_secret"] = self.client_secret,
-        }
-    end
     local fail = function(response)
         QuickApp:error('Unable to authenticate')
         if self.access_token == self.token then
@@ -165,16 +163,32 @@ function Netatmo:auth(callback)
             self.config:setAccessToken('')
         end
         Netatmo:setToken('')
+        if callback ~= nil then
+            callback(response)
+        end
+    end
+    if string.len(self.refresh_token) < 10 then
+        QuickApp:error('No refresh token available. Cannot authenticate the device.')
+        fail({
+            error = "No refresh token available. Cannot authenticate the device."
+        })
+        return
     end
     local success = function(response)
-        if response.status > 299 then
-            fail(response)
+        -- QuickApp:debug('---')
+        -- QuickApp:debug(response.status)
+        -- QuickApp:debug(response.data)
+        if response.status > 299 or response.status < 200 then
+            fail({
+                error = "Unable to authenticate"
+            })
             return
         end
         local data = json.decode(response.data)
         Netatmo:setToken(data.access_token)
+        Netatmo:setRefreshToken(data.refresh_token)
         if callback ~= nil then
-            callback(data)
+            callback({})
         end
     end
     self.http:postForm('https://api.netatmo.net/oauth2/token', data, success, fail)
@@ -183,6 +197,14 @@ end
 function Netatmo:setToken(token)
     self.token = token
     Globals:set('netatmo_atoken', token)
+end
+
+function Netatmo:setRefreshToken(refresh_token)
+    QuickApp:debug('setting new refresh token ')
+    QuickApp:debug(refresh_token)
+    self.refresh_token = refresh_token
+    Globals:set('netatmo_rtoken', refresh_token)
+    Config:setRefreshToken(refresh_token)
 end
 
 function Netatmo:getToken()
