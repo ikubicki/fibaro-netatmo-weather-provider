@@ -28,7 +28,7 @@ To acquire required parameters, you need to go to Netatmo Connect site and creat
 From generated token you need to use a Refresh Token value.
 This should allow you to run quick application in your Fibaro Home Center device.
 
-You may use a dedicated tool to get the refresh token for you: https://codebuilders.pl/netatmo/
+You may use a dedicated tool to get the refresh token for your client application: https://codebuilders.pl/netatmo/
 
 ## Changing weather provider
 
