@@ -43,6 +43,11 @@ function Config:getRefreshToken()
     return self.rtoken
 end
 
+function Config:setRefreshToken(token)
+    self.app:setVariable("RefreshToken", token)
+    self.rtoken = rtoken
+end
+
 function Config:getTimeoutInterval()
     return tonumber(self.interval) * 60000
 end
