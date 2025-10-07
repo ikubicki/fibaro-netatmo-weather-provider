@@ -44,3 +44,10 @@ This quick application integrates with other Netatmo dedicated quick apps for de
 ## Support
 
 Due to horrible user experience with Fibaro Marketplace, for better communication I recommend to contact with me through GitHub or create an issue in the repository.
+
+## Changelog
+
+ * **v.2.1.2**
+   * Application will automatically update refresh token in QA variables section
+   * Changed refresh token url
+   * Configs cleanup in Netatmo client file

@@ -18,34 +18,30 @@ function Config:getClientSecret()
     return self.clientSecret
 end
 
-function Config:getUsername()
-    return self.username
-end
-
-function Config:getPassword()
-    return self.password
-end
-
 function Config:getDeviceID()
     return self.deviceID
 end
 
 function Config:getAccessToken()
-    return self.token
+    if self.atoken ~= "" then
+        return self.atoken
+    end
+    return Globals:get('netatmo_atoken')
 end
 
-function Config:setAccessToken(token)
-    self.app:setVariable("AccessToken", token)
-    self.token = token
+function Config:setAccessToken(atoken)
+    self.atoken = atoken
+    Globals:set('netatmo_atoken', atoken)
 end
 
 function Config:getRefreshToken()
     return self.rtoken
 end
 
-function Config:setRefreshToken(token)
-    self.app:setVariable("RefreshToken", token)
+function Config:setRefreshToken(rtoken)
     self.rtoken = rtoken
+    Globals:set('netatmo_rtoken', rtoken)
+    self.app:setVariable("RefreshToken", rtoken)
 end
 
 function Config:getTimeoutInterval()
@@ -60,12 +56,10 @@ what they want to add into HC3 virtual devices.
 function Config:init()
     self.clientID = self.app:getVariable('ClientID')
     self.clientSecret = self.app:getVariable('ClientSecret')
-    self.username = self.app:getVariable('Username')
-    self.password = self.app:getVariable('Password')
     self.deviceID = tostring(self.app:getVariable('DeviceID'))
     self.interval = self.app:getVariable('Interval')
-    self.token = self.app:getVariable('AccessToken')
     self.rtoken = self.app:getVariable('RefreshToken')
+    self.atoken = Globals:get('netatmo_atoken')
 
     local storedClientID = Globals:get('netatmo_client_id')
     local storedClientSecret = Globals:get('netatmo_client_secret')

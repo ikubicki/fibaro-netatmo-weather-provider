@@ -1,7 +1,7 @@
 --[[
 Netatmo Weather Provider
 @author ikubicki
-@version 2.1.1
+@version 2.1.2
 ]]
 
 function QuickApp:setCondition(condition)
@@ -158,7 +158,3 @@ end
 function QuickApp:getProperty(name)
     return fibaro.getValue(plugin.mainDeviceId, name)
 end
-
-
-
-
