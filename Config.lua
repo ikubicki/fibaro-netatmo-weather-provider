@@ -34,6 +34,12 @@ function Config:setAccessToken(atoken)
     Globals:set('netatmo_atoken', atoken)
 end
 
+function Config:syncAccessToken(atoken)
+    if atoken ~= "" and Globals:get('netatmo_atoken') == "" then
+        Globals:set('netatmo_atoken', atoken)
+    end
+end
+
 function Config:getRefreshToken()
     return self.rtoken
 end

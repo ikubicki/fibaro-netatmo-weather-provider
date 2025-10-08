@@ -17,7 +17,7 @@ function Netatmo:new(config)
     return self
 end
 
-function Netatmo:searchDevices(callback)
+function Netatmo:searchDevices(callback, fallback)
     local buildModule = function(module)
         return {
             id = module._id,
@@ -54,12 +54,12 @@ function Netatmo:searchDevices(callback)
             callback(response)
             return
         end
-        self:getStationsData(getStationsDataCallback)
+        self:getStationsData(getStationsDataCallback, fallback)
     end
-    self:auth(authCallback)
+    self:auth(authCallback, fallback)
 end
 
-function Netatmo:getWeatherData(callback)
+function Netatmo:getWeatherData(callback, fallback)
     local getStationsDataCallback = function(devices)
         local device = devices[1]
         local weatherData = {
@@ -90,12 +90,12 @@ function Netatmo:getWeatherData(callback)
             callback(response)
             return
         end
-        self:getStationsData(getStationsDataCallback)
+        self:getStationsData(getStationsDataCallback, fallback)
     end
-    self:auth(authCallback)
+    self:auth(authCallback, fallback)
 end
 
-function Netatmo:getStationsData(callback, attempt)
+function Netatmo:getStationsData(callback, fallback, attempt)
     if attempt == nil then
         attempt = 0
     end
@@ -115,10 +115,12 @@ function Netatmo:getStationsData(callback, attempt)
             fibaro.setTimeout(3000, function()
                 QuickApp:debug('Netatmo:getStationData - Retry attempt #' .. attempt)
                 local authCallback = function(response)
-                    self:getStationsData(callback, attempt)
+                    self:getStationsData(callback, fallback, attempt)
                 end
                 self:auth(authCallback)
             end)
+        elseif fallback ~= nil then
+            fallback(response) 
         end
     end
     local success = function(response)
@@ -141,9 +143,10 @@ function Netatmo:getStationsData(callback, attempt)
     self.http:get(url, success, fail, headers)
 end
 
-function Netatmo:auth(callback)
+function Netatmo:auth(callback, fallback)
     if string.len(self:getAccessToken()) > 10 then
         -- QuickApp:debug('Already authenticated')
+        self:syncAccessToken()
         if callback ~= nil then
             callback({})
         end
@@ -161,8 +164,11 @@ function Netatmo:auth(callback)
         if self.access_token ~= "" and response.status == 401 then
             self:setAccessToken('')
         end
-        if callback ~= nil then
-            callback(response)
+        if fallback ~= nil then
+            fallback({
+                status = 401,
+                data = 'Unable to authenticate with given refresh token'
+            })
         end
     end
     if string.len(self.refresh_token) < 10 then
@@ -207,4 +213,10 @@ end
 function Netatmo:setRefreshToken(refresh_token)
     self.refresh_token = refresh_token
     self.config:setRefreshToken(refresh_token)
+end
+
+function Netatmo:syncAccessToken()
+    if self.access_token then
+        self.config:syncAccessToken(self.access_token)
+    end
 end

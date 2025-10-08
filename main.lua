@@ -1,7 +1,7 @@
 --[[
 Netatmo Weather Provider
 @author ikubicki
-@version 2.1.3
+@version 2.2.0
 ]]
 
 function QuickApp:setCondition(condition)
@@ -92,8 +92,18 @@ function QuickApp:pullNetatmoData()
         end
         self:updateView("label1", "text", string.format(self.i18n:get('last-update'), os.date('%Y-%m-%d %H:%M:%S')))
         self:updateView("button2_2", "text", self.i18n:get('refresh'))
+        if self.properties.dead == true then
+            self:setDeadProperty(false)    
+        end
     end
-    self.netatmo:getWeatherData(getWeatherDataCallback)    
+    local fallback = function(response)
+        self:updateView("label1", "text", string.format(self.i18n:get('error-updates'), response.status, response.data))
+        self:updateView("button2_2", "text", self.i18n:get('refresh'))
+        if self.properties.dead == false then
+            self:setDeadProperty(true)
+        end
+    end
+    self.netatmo:getWeatherData(getWeatherDataCallback, fallback)    
 end
 
 function QuickApp:refreshEvent()
@@ -123,8 +133,18 @@ function QuickApp:searchEvent()
         end
         self:updateView("button2_1", "text", self.i18n:get('search-devices'))
         self:updateView("label1", "text", string.format(self.i18n:get('check-logs'), 'QUICKAPP' .. self.id))
+        if self.properties.dead == true then
+            self:setDeadProperty(false)    
+        end
     end
-    self.netatmo:searchDevices(searchDevicesCallback)
+    local fallback = function(response)
+        self:updateView("label1", "text", string.format(self.i18n:get('error-search'), response.status, response.data))
+        self:updateView("button2_2", "text", self.i18n:get('refresh'))
+        if self.properties.dead == false then
+            self:setDeadProperty(true)
+        end
+    end
+    self.netatmo:searchDevices(searchDevicesCallback, fallback)
 end
 
 function QuickApp:showTemperature()
@@ -157,4 +177,12 @@ end
 
 function QuickApp:getProperty(name)
     return fibaro.getValue(plugin.mainDeviceId, name)
+end
+
+function QuickApp:setDeadProperty(value)
+    return api.put('/devices/' .. self.id, {
+        properties = {
+            dead = value
+        }
+    })
 end
