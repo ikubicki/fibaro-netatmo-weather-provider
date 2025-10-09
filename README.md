@@ -47,6 +47,9 @@ Due to horrible user experience with Fibaro Marketplace, for better communicatio
 
 ## Changelog
 
+ * **v.2.2.0**
+   * Improved error reporting through status messages in QA UI and by marking device dead when commication to Netatmo API fails.
+
  * **v.2.1.3**
    * Handles 403 (next to 401) on expired access token
 
