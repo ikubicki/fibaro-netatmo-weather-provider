@@ -100,9 +100,8 @@ function Netatmo:getStationsData(callback, fallback, attempt)
         attempt = 0
     end
     local fail = function(response)
-        QuickApp:error('Unable to pull devices')
-        -- QuickApp:debug(response.status)
-        -- QuickApp:debug(response.data)
+        QuickApp:warning('Unable to pull devices [' .. (response.status or 0) .. ']')
+        QuickApp:debug(response.data or response or 'Unknown error')
         if response.status == 400 then
             return
         end
@@ -117,7 +116,7 @@ function Netatmo:getStationsData(callback, fallback, attempt)
                 local authCallback = function(response)
                     self:getStationsData(callback, fallback, attempt)
                 end
-                self:auth(authCallback)
+                self:auth(authCallback, fallback)
             end)
         elseif fallback ~= nil then
             fallback(response) 

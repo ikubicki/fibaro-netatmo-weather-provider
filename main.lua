@@ -1,8 +1,10 @@
 --[[
 Netatmo Weather Provider
 @author ikubicki
-@version 2.2.0
+@version 2.2.1
 ]]
+
+QuickApp.logLevel = 9 -- This makes QuickApp working under 5.200.8 and higher
 
 function QuickApp:setCondition(condition)
     local conditionCodes = {

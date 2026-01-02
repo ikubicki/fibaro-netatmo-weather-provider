@@ -20,8 +20,6 @@ Data updates every 5 minutes by default.
 
 `Interval` - number of minutes defining how often data should be refreshed. This value will be automatically populated on initialization of quick application.
 
-`AccessToken` - Allows to set own access token and bypass credentials authentication.
-
 ## Installation
 
 To acquire required parameters, you need to go to Netatmo Connect site and create new application. Once that's done, you will be able to get client ID and client secret. To get refresh token, you need to use a Token generator (section below you get client id and client secret).
@@ -46,6 +44,10 @@ This quick application integrates with other Netatmo dedicated quick apps for de
 Due to horrible user experience with Fibaro Marketplace, for better communication I recommend to contact with me through GitHub or create an issue in the repository.
 
 ## Changelog
+
+ * **v.2.2.1**
+   * Restores fallback handling for failing authentication
+   * Adds a workaround to make the app working on firmware 5.200.8
 
  * **v.2.2.0**
    * Improved error reporting through status messages in QA UI and by marking device dead when commication to Netatmo API fails.
