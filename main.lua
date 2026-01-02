@@ -1,7 +1,7 @@
 --[[
 Netatmo Weather Provider
 @author ikubicki
-@version 2.2.1
+@version 2.2.2
 ]]
 
 QuickApp.logLevel = 9 -- This makes QuickApp working under 5.200.8 and higher

@@ -6,6 +6,11 @@ class 'Config'
 
 function Config:new(app)
     self.app = app
+    self.atoken = ""
+    self.rtoken = ""
+    self.clientID = ""
+    self.clientSecret = ""
+    self.deviceID = ""
     self:init()
     return self
 end
@@ -76,14 +81,14 @@ function Config:init()
     if string.len(self.clientID) < 4 and string.len(storedClientID) > 3 then
         self.app:setVariable("ClientID", storedClientID)
         self.clientID = storedClientID
-    elseif (storedClientID == nil and self.clientID) then -- or storedClientID ~= self.clientID then
+    elseif (storedClientID == nil and self.clientID) then
         Globals:set('netatmo_client_id', self.clientID)
     end
     -- handling client secret
     if string.len(self.clientSecret) < 4 and string.len(storedClientSecret) > 3 then
         self.app:setVariable("ClientSecret", storedClientSecret)
         self.clientSecret = storedClientSecret
-    elseif (storedClientSecret == nil and self.clientSecret) then -- or storedClientSecret ~= self.clientSecret then
+    elseif (storedClientSecret == nil and self.clientSecret) then
         Globals:set('netatmo_client_secret', self.clientSecret)
     end
     -- handling rtoken
@@ -91,7 +96,7 @@ function Config:init()
         self.app:setVariable("RefreshToken", storedRToken)
         self.rtoken = storedRToken
     elseif (storedRToken == nil and self.rtoken) then
-        Globals:set('netatmo_rtoken', self.token)
+        Globals:set('netatmo_rtoken', self.rtoken)
     end
     -- handling interval
     if not self.interval or self.interval == "" then
@@ -102,7 +107,7 @@ function Config:init()
             self.interval = "5"
         end
     end
-    if (storedInterval == "" and self.interval ~= "") then -- or storedInterval ~= self.interval then
+    if (storedInterval == "" and self.interval ~= "") then
         Globals:set('netatmo_interval', self.interval)
     end
 end

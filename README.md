@@ -45,6 +45,9 @@ Due to horrible user experience with Fibaro Marketplace, for better communicatio
 
 ## Changelog
 
+ * **v.2.2.2**
+   * Setting default values for Config object
+
  * **v.2.2.1**
    * Restores fallback handling for failing authentication
    * Adds a workaround to make the app working on firmware 5.200.8
